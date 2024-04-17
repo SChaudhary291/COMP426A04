@@ -1,5 +1,6 @@
 // ActivitySuggestionsController.js
 import { WeatherBasedActivityModel } from "./ActivitySuggestionsModel.js";
+import { ActivitySuggestionsView } from "./ActivitySuggestionsView.js";
 
 export class ActivitySuggestionsController {
     #model;
@@ -9,15 +10,15 @@ export class ActivitySuggestionsController {
         this.#model = model;
         this.#view = view;
 
-        // Setup listeners to model events
         this.#model.addEventListener('weather_update', () => this.updateActivities());
-
-        // Optionally, listen to view events such as user input
         this.#view.onCityChange = (newCity) => this.updateWeather(newCity);
     }
 
     async updateWeather(city) {
-        await this.#model.fetchWeather(city);
+        const weatherData = await this.#model.fetchWeather(city);
+        if (weatherData && weatherData.coord) {
+            this.#view.updateMap(weatherData.coord.lat, weatherData.coord.lon);
+        }
     }
 
     updateActivities() {
@@ -25,4 +26,3 @@ export class ActivitySuggestionsController {
         this.#view.displayActivities(activities);
     }
 }
-

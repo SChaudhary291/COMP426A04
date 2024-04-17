@@ -2,23 +2,26 @@
 <html>
 <head>
     <title>Activity Suggestions</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <script type="module" src="./ActivitySuggestionsModel.js"></script>
+    <script type="module" src="./ActivitySuggestionsView.js"></script>
+    <script type="module" src="./ActivitySuggestionsController.js"></script>
 </head>
 <body>
     <input type="text" id="cityInput" placeholder="Enter City">
     <button id="citySubmit">Get Activities</button>
     <ul id="activitiesList"></ul>
+    <div id="map" style="height: 400px;"></div>
 
-    <script src="./ActivitySuggestionsModel.js"></script>
-    <script src="./ActivitySuggestionsView.js"></script>
-    <script src="./ActivitySuggestionsController.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const model = new WeatherBasedActivityModel('YOUR_API_KEY');
+        function initMap() {
+            const model = new WeatherBasedActivityModel('YOUR_WEATHER_API_KEY');
             const view = new ActivitySuggestionsView();
+            view.initMap(); // Initialize the map through the view
             const controller = new ActivitySuggestionsController(model, view);
 
             view.setupCityInputListener(); // Initialize input listeners
-        });
+        }
     </script>
 </body>
 </html>

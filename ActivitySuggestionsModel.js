@@ -8,13 +8,15 @@ export class Activity {
 }
 
 export class WeatherBasedActivityModel extends EventTarget {
-    #activities
-    #currentWeather
-    #apiKeyWeather
+    #activities;
+    #currentWeather;
+    #apiKeyWeather;
+    #apiKeyMaps;  // New API key for Google Maps
 
-    constructor(apiKey) {
+    constructor(weatherApiKey, mapsApiKey) {
         super();
-        this.#apiKeyWeather = apiKey;
+        this.#apiKeyWeather = weatherApiKey;
+        this.#apiKeyMaps = mapsApiKey;
         this.#activities = [
             new Activity("Park Visit", "Visit a local park for a pleasant walk or a quick jog."),
             new Activity("Museum Tour", "Explore local history and culture at a nearby museum."),
@@ -23,17 +25,29 @@ export class WeatherBasedActivityModel extends EventTarget {
             new Activity("Movie Day", "Stay in and watch new or classic films."),
             new Activity("Board Game Night", "Organize a board game night with friends or family.")
         ];
-
     }
 
-    async fetchWeather(city) {
+    async fetchWeatherByCity(city) {
         try {
-            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${this.#apiKeyWeather}`);
-            this.#currentWeather = await response.json();
+            // Fetching coordinates for the city from Google Maps Geocoding API
+            const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${this.#apiKeyMaps}`;
+            const geoResponse = await fetch(geoUrl);
+            const geoData = await geoResponse.json();
+
+            if (geoData.results.length === 0) {
+                throw new Error("No results found for specified location.");
+            }
+
+            const { lat, lng } = geoData.results[0].geometry.location;
+
+            // Using coordinates to fetch weather from OpenWeatherMap
+            const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${this.#apiKeyWeather}`;
+            const weatherResponse = await fetch(weatherUrl);
+            this.#currentWeather = await weatherResponse.json();
             this.dispatchEvent(new Event('weather_update'));
             return this.#currentWeather;
         } catch (error) {
-            console.error("Failed to fetch weather data:", error);
+            console.error("Failed to fetch data:", error);
         }
     }
 
