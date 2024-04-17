@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activity Suggestions</title>
+</head>
+<body>
+    <input type="text" id="cityInput" placeholder="Enter City">
+    <button id="citySubmit">Get Activities</button>
+    <ul id="activitiesList"></ul>
+
+    <script src="./ActivitySuggestionsModel.js"></script>
+    <script src="./ActivitySuggestionsView.js"></script>
+    <script src="./ActivitySuggestionsController.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const model = new WeatherBasedActivityModel('YOUR_API_KEY');
+            const view = new ActivitySuggestionsView();
+            const controller = new ActivitySuggestionsController(model, view);
+
+            view.setupCityInputListener(); // Initialize input listeners
+        });
+    </script>
+</body>
+</html>
