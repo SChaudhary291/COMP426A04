@@ -10,8 +10,8 @@ export class Activity {
 export class WeatherBasedActivityModel extends EventTarget {
     #activities;
     #currentWeather;
-    #apiKeyWeather;
-    #apiKeyMaps;  // New API key for Google Maps
+    #apiKeyWeather = `YOUR_OPENWEATHERMAP_API_KEY`; //New API key for OpenWeatherMap
+    #apiKeyMaps = `YOUR_GOOGLE_MAPS_API_KEY`;  // New API key for Google Maps
 
     constructor(weatherApiKey, mapsApiKey) {
         super();
