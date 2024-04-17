@@ -23,6 +23,7 @@ export class WeatherBasedActivityModel extends EventTarget {
             new Activity("Movie Day", "Stay in and watch new or classic films."),
             new Activity("Board Game Night", "Organize a board game night with friends or family.")
         ];
+
     }
 
     async fetchWeather(city) {

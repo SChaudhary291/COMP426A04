@@ -14,6 +14,7 @@ export class ActivitySuggestionsView {
                 this.onCityChange(cityInput.value);
             }
         });
+        
     }
 
     displayActivities(activities) {
